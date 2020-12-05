@@ -3,25 +3,25 @@
   "contentVersion": "1.0.0.0",
   "parameters": {
     "adminUsername": {
-      "value": "GEN-UNIQUE"
+      "value": "joeadmin"
     },
     "adminPassword": {
-      "value": "GEN-PASSWORD"
+      "value": "1MyPassword!!"
     },
     "storageAccountNamePrefix": {
-      "value": "GEN-UNIQUE-8"
+      "value": "demostgacct"
     },
     "storageAccountType": {
       "value": "Standard_LRS"
     },
     "vmSeries": {
-      "value": "D"
+      "value": "DS"
     },
     "virtualNetworkName": {
-      "value": "GEN-VNET-NAME"
+      "value": "demoVnet"
     },
     "subnetName": {
-      "value": "GEN-VNET-SUBNET1-NAME"
+      "value": "demoSubnet"
     },
     "addressPrefix": {
       "value": "10.0.0.0/16"
@@ -33,10 +33,10 @@
       "value": "10.0.0.1"
     },
     "jumpbox": {
-      "value": "Disabled"
+      "value": "Enabled"
     },
     "tshirtSize": {
-      "value": "XSmall"
+      "value": "Small"
     },
     "osFamily": {
       "value": "Ubuntu"
@@ -48,7 +48,7 @@
       "value": "rs0"
     },
     "replicaSetKey": {
-      "value": "GEN-UNIQUE-8"
+      "value": "1MyPassword!!"
     }
   }
 }
