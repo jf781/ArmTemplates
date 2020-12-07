@@ -6,16 +6,13 @@
       "value": "joeadmin"
     },
     "adminPassword": {
-      "value": "1MyPassword!!"
+      "value": "1MyPassword"
     },
     "storageAccountNamePrefix": {
       "value": "demostgacct"
     },
     "storageAccountType": {
       "value": "Standard_LRS"
-    },
-    "vmSeries": {
-      "value": "DS"
     },
     "virtualNetworkName": {
       "value": "demoVnet"
@@ -38,17 +35,14 @@
     "tshirtSize": {
       "value": "Small"
     },
-    "osFamily": {
-      "value": "Ubuntu"
-    },
     "mongodbVersion": {
-      "value": "4.0.2"
+      "value": "4.0.21"
     },
     "replicaSetName": {
       "value": "rs0"
     },
     "replicaSetKey": {
-      "value": "1MyPassword!!"
+      "value": "1MyPassword"
     }
   }
 }

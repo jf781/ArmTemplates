@@ -32,17 +32,6 @@
         "description": "Storage account type to be provisioned"
       }
     },
-    "vmSeries": {
-      "type": "string",
-      "defaultValue": "D",
-      "allowedValues": [
-        "D",
-        "DS"
-      ],
-      "metadata": {
-        "description": "Virtual machine series to use for data nodes in cluster"
-      }
-    },
     "virtualNetworkName": {
       "type": "string",
       "defaultValue": "mongodbVnet",
@@ -104,19 +93,15 @@
         "description": "T-shirt size of the MongoDB deployment"
       }
     },
-    "osFamily": {
-      "type": "string",
-      "defaultValue": "Ubuntu",
-      "allowedValues": [
-        "Ubuntu"
-      ],
-      "metadata": {
-        "description": "The target OS for the virtual machines running MongoDB"
-      }
-    },
     "mongodbVersion": {
       "type": "string",
-      "defaultValue": "3.0.2",
+      "defaultValue": "4.2.11",
+      "allowedValues": [
+        "4.4.2",
+        "4.2.11",
+        "4.0.21",
+        "3.6.21"
+      ],
       "metadata": {
         "description": "The version of the MongoDB packages to be deployed"
       }
@@ -134,14 +119,6 @@
         "description": "The shared secret key for the MongoDB replica set"
       }
     },
-    "location": {
-      "type": "string",
-      "defaultValue": "[resourceGroup().location]",
-      "metadata": {
-        "description": "Location for all resources."
-      }
-    }
-    ,
     "_artifactsLocation": {
          "type": "string",
         "defaultValue": "https://raw.githubusercontent.com/jf781/ArmTemplates/main/mongo-ha/",
@@ -158,10 +135,12 @@
       }
   },
   "variables": {
-    "_comment0": "/* T-shirt sizes may vary for different reasons, and some customers may want to modify these - so feel free to go ahead and define your favorite t-shirts */",
+    "location": "[resourceGroup().location]",
+    "osFamily": "Ubuntu",
+    " _comment0": "/* T-shirt sizes may vary for different reasons, and some customers may want to modify these - so feel free to go ahead and define your favorite t-shirts */",
     "tshirtSizeXSmall": {
-      "vmSizeMember": "[concat('Standard_', parameters('vmSeries'), '1_v2')]",
-      "vmSizeArbiter": "[concat('Standard_', parameters('vmSeries'), '1_v2')]",
+      "vmSizeMember": "Standard_DS1_v2",
+      "vmSizeArbiter": "Standard_DS1_v2",
       "numberOfMembers": 1,
       "totalMemberCount": 2,
       "arbiter": "Enabled",
@@ -170,8 +149,8 @@
       "dataDiskSize": 128
     },
     "tshirtSizeSmall": {
-      "vmSizeMember": "[concat('Standard_', parameters('vmSeries'), '1_v2')]",
-      "vmSizeArbiter": "[concat('Standard_', parameters('vmSeries'), '1_v2')]",
+      "vmSizeMember": "Standard_DS1_v2",
+      "vmSizeArbiter": "Standard_DS1_v2",
       "numberOfMembers": 2,
       "totalMemberCount": 3,
       "arbiter": "Disabled",
@@ -180,8 +159,8 @@
       "dataDiskSize": 128
     },
     "tshirtSizeMedium": {
-      "vmSizeMember": "[concat('Standard_', parameters('vmSeries'), '2_v2')]",
-      "vmSizeArbiter": "[concat('Standard_', parameters('vmSeries'), '1_v2')]",
+      "vmSizeMember": "Standard_DS2_v2",
+      "vmSizeArbiter": "Standard_DS1_v2",
       "numberOfMembers": 3,
       "totalMemberCount": 4,
       "arbiter": "Enabled",
@@ -190,8 +169,8 @@
       "dataDiskSize": 256
     },
     "tshirtSizeLarge": {
-      "vmSizeMember": "[concat('Standard_', parameters('vmSeries'), '2_v2')]",
-      "vmSizeArbiter": "[concat('Standard_', parameters('vmSeries'), '1_v2')]",
+      "vmSizeMember": "Standard_DS2_v2",
+      "vmSizeArbiter": "Standard_DS1_v2",
       "numberOfMembers": 7,
       "totalMemberCount": 8,
       "arbiter": "Enabled",
@@ -200,8 +179,8 @@
       "dataDiskSize": 256
     },
     "tshirtSizeXLarge": {
-      "vmSizeMember": "[concat('Standard_', parameters('vmSeries'), '3_v2')]",
-      "vmSizeArbiter": "[concat('Standard_', parameters('vmSeries'), '1_v2')]",
+      "vmSizeMember": "Standard_DS3_v2",
+      "vmSizeArbiter": "Standard_DS1_v2",
       "numberOfMembers": 7,
       "totalMemberCount": 8,
       "arbiter": "Enabled",
@@ -210,8 +189,8 @@
       "dataDiskSize": 512
     },
     "tshirtSizeXXLarge": {
-      "vmSizeMember": "[concat('Standard_', parameters('vmSeries'), '3_v2')]",
-      "vmSizeArbiter": "[concat('Standard_', parameters('vmSeries'), '1_v2')]",
+      "vmSizeMember": "Standard_DS3_v2",
+      "vmSizeArbiter": "Standard_DS1_v2",
       "numberOfMembers": 15,
       "totalMemberCount": 16,
       "arbiter": "Disabled",
@@ -246,7 +225,7 @@
     "storageSettings": {
       "vhdStorageAccountName": "[parameters('storageAccountNamePrefix')]",
       "vhdContainerName": "[variables('vmStorageAccountContainerName')]",
-      "vmSeries": "[parameters('vmSeries')]",
+      "vmSeries": "DS",
       "destinationVhdsContainer": "[concat('https://', parameters('storageAccountNamePrefix'), variables('vmStorageAccountDomain'), '/', variables('vmStorageAccountContainerName'), '/')]",
       "storageAccountCount": "[variables('clusterSpec').storageAccountCount]",
       "storageAccountType": "[parameters('storageAccountType')]"
@@ -271,7 +250,7 @@
       }
     },
     "clusterSpec": "[variables(concat('tshirtSize', parameters('tshirtSize')))]",
-    "osFamilySpec": "[variables(concat('osFamily', parameters('osFamily')))]",
+    "osFamilySpec": "[variables(concat('osFamily', variables('osFamily')))]",
     "installCommand": "[concat('bash mongodb-', variables('osFamilySpec').osName, '-install.sh', ' -i ', variables('osFamilySpec').installerBaseUrl, ' -b ', variables('osFamilySpec').installerPackages, ' -v ', variables('osFamilySpec').installerVersion , ' -r ', parameters('replicaSetName'), ' -k ', parameters('replicaSetKey'), ' -u ', parameters('adminUsername'), ' -p ', parameters('adminPassword'), ' -x ', variables('networkSettings').machineIpPrefix, ' -n ', variables('clusterSpec').totalMemberCount)]",
     "vmScripts": {
       "scriptsToDownload": [
@@ -348,7 +327,7 @@
             "value": "[variables('networkSettings')]"
           },
           "location":{
-            "value":"[parameters('location')]"
+            "value":"[variables('location')]"
           }
         }
       }
@@ -374,7 +353,7 @@
             "value": {
               "vhdStorageAccountName": "[concat(variables('storageSettings').vhdStorageAccountName, '0')]",
               "vhdContainerName": "[variables('storageSettings').vhdContainerName]",
-              "vmSeries": "[parameters('vmSeries')]",
+              "vmSeries": "DS",
               "destinationVhdsContainer": "[concat('https://', variables('storageSettings').vhdStorageAccountName, '0', variables('vmStorageAccountDomain'), '/', variables('storageSettings').vhdContainerName, '/')]"
             }
           },
@@ -385,7 +364,7 @@
             "value": "[variables('machineSettings')]"
           },
           "location": {
-            "value": "[parameters('location')]"
+            "value": "[variables('location')]"
           }
         }
       }
@@ -435,7 +414,7 @@
             }
           },
           "location":{
-            "value": "[parameters('location')]"
+            "value": "[variables('location')]"
           }
         }
       }
@@ -481,7 +460,7 @@
             }
           },
           "location":{
-            "value":"[parameters('location')]"
+            "value": "[variables('location')]"
           }
         }
       }
@@ -525,7 +504,7 @@
             }
           },
           "location":{
-            "value":"[parameters('location')]"
+            "value": "[variables('location')]"
           }
         }
       }
